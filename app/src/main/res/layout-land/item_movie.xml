@@ -7,8 +7,8 @@
     android:layout_height="match_parent">
 
     <ImageView
-        app:layout_widthPercent="38%"
-        app:layout_aspectRatio="67%"
+        app:layout_widthPercent="62%"
+        app:layout_aspectRatio="178%"
         android:id="@+id/ivMovieImage"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

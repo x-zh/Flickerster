@@ -1,6 +1,8 @@
 package com.codepath.flickerster.adapters;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,32 +16,59 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by charlie_zhou on 5/17/16.
  */
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
+    static class ViewHolder {
+        @BindView(R.id.ivMovieImage) ImageView ivImage;
+        @BindView(R.id.tvTitle) TextView tvTitle;
+        @BindView(R.id.tvOverview) TextView tvOverview;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
+
     public MovieArrayAdapter(Context c, List<Movie> movies) {
-        super(c, android.R.layout.simple_list_item_1, movies);
+        super(c, R.layout.item_movie, movies);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Movie movie = getItem(position);
+        ViewHolder viewHolder;
 
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item_movie, parent, false);
+            viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        ImageView ivImage = (ImageView) convertView.findViewById(R.id.ivMovieImage);
-        ivImage.setImageResource(0);
-        TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-        TextView tvOverview = (TextView) convertView.findViewById(R.id.tvOverview);
+        viewHolder.ivImage.setImageResource(0);
 
-        Picasso.with(getContext()).load(movie.getPosterPath()).into(ivImage);
-        tvTitle.setText(movie.getOriginalTitle());
-        tvOverview.setText(movie.getOverview());
+        int displayMode = convertView.getResources().getConfiguration().orientation;
+        if (displayMode == Configuration.ORIENTATION_LANDSCAPE ) {
+            Picasso.with(getContext()).load(movie.getBackdropPath()).fit()
+                    .placeholder(R.drawable.placeholder_land)
+                    .error(R.drawable.placeholder_land)
+                    .into(viewHolder.ivImage);
+
+        } else {
+            Picasso.with(getContext()).load(movie.getPosterPath()).fit()
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+                    .into(viewHolder.ivImage);
+        }
+        viewHolder.tvTitle.setText(movie.getOriginalTitle());
+        viewHolder.tvOverview.setText(movie.getOverview());
         return convertView;
     }
 }
