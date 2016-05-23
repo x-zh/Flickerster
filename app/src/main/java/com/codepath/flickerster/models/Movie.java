@@ -15,6 +15,11 @@ public class Movie {
     String originalTitle;
     String overview;
     String backdropPath;
+    Integer id;
+
+    public Integer getId() {
+        return id;
+    }
 
     public String getBackdropPath() {
         return String.format("https://image.tmdb.org/t/p/w600%s", backdropPath);
@@ -37,6 +42,7 @@ public class Movie {
         this.originalTitle = jsonObject.getString("original_title");
         this.overview = jsonObject.getString("overview");
         this.backdropPath = jsonObject.getString("backdrop_path");
+        this.id = jsonObject.getInt("id");
     }
 
     public static ArrayList<Movie> fromJSONArray(JSONArray jsonArray) {
